@@ -8,9 +8,17 @@ env:
   # - VIM_VERSION="74"
   - VIM_VERSION="NEOVIM"
 
+# Disable python3 testing with Neovim: https://github.com/neovim/neovim/issues/1829
+matrix:
+  exclude:
+    - python: 3.3
+      env: VIM_VERSION="NEOVIM"
+    - python: 3.4
+      env: VIM_VERSION="NEOVIM"
+
 install: 
-   - sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
    - pip install neovim==0.0.34
+   - sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
 
 before_script:
   - tmux new -d -s vim
