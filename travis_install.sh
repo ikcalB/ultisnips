@@ -3,10 +3,7 @@
 # Installs a known version of vim in the travis test runner.
 set -ex
 
-echo $(which python)
-echo ${VIM_VERSION}
-echo ${TRAVIS_PYTHON_VERSION}
-
+# Unfortunately we have to run this script under sudo. This means we do not inherit the environment of travis :(.
 VIM_VERSION=$1; shift
 PYTHON_EXECUTABLE=$1; shift
 PYTHON_VERSION="$(${PYTHON_EXECUTABLE} --version 2>&1)"
