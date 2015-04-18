@@ -17,6 +17,7 @@ matrix:
       env: VIM_VERSION="NEOVIM"
 
 install: 
+   # Some of these commands fail trasiently. We keep retrying them until they suceed.
    # This PPA contains tmux 1.8.
    - until sudo add-apt-repository ppa:kalakris/tmux -y; do sleep 10; done
    - until sudo add-apt-repository ppa:neovim-ppa/unstable -y; do sleep 10; done
