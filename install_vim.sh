@@ -66,6 +66,7 @@ elif [[ $VIM_VERSION == "NEOVIM" ]]; then
    repeat_transiently_failing_command "add-apt-repository ppa:neovim-ppa/unstable -y"
    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL xclip gdb neovim"
    VIM_BINARY="/usr/bin/nvim"
+   sudo pip install neovim
 else
    echo "Unknown VIM_VERSION: $VIM_VERSION"
    exit 1
