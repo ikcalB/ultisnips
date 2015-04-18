@@ -6,6 +6,16 @@ set -ex
 VIM_VERSION=$1; shift
 PYTHON_VERSION=$1; shift
 
+repeat_transiently_failing_command () {
+   COMMAND=$1; shift
+
+   set +e
+   until ${COMMAND}; do
+      sleep 10
+   done
+   set -e
+}
+
 build_vanilla_vim () {
    URL=$1; shift;
 
@@ -50,23 +60,13 @@ build_neovim () {
    pushd vim_build
 
    git checkout $SHA
-   make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" install
+   repeat_transiently_failing_command "make CMAKE_EXTRA_FLAGS=\"-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim\" install"
 
    popd 
    rm -rf vim_build
 
    # Dirty hack, since PATH seems to be ignored.
    ln -sf /home/travis/neovim/bin/nvim /usr/bin/vim
-}
-
-repeat_transiently_failing_command () {
-   COMMAND=$1; shift
-
-   set +e
-   until ${COMMAND}; do
-      sleep 10
-   done
-   set -e
 }
 
 # Clone the dependent plugins we want to use.
