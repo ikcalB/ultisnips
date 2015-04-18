@@ -61,13 +61,13 @@ build_vanilla_vim () {
 ./test_all.py --clone-plugins
 
 # This PPA contains tmux 1.8.
-repeat_transiently_failing_command "add-apt-repository ppa:kalakris/tmux -y"
+repeat_transiently_failing_command "sudo add-apt-repository ppa:kalakris/tmux -y"
 PACKAGES_TO_INSTALL="tmux"
 
 if [[ $VIM_VERSION == "74" ]]; then
    build_vanilla_vim ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
 elif [[ $VIM_VERSION == "NEOVIM" ]]; then
-   repeat_transiently_failing_command "add-apt-repository ppa:neovim-ppa/unstable -y"
+   repeat_transiently_failing_command "sudo add-apt-repository ppa:neovim-ppa/unstable -y"
    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL xclip gdb neovim"
    VIM_BINARY="/usr/bin/nvim"
 
@@ -80,8 +80,8 @@ else
    exit 1
 fi
 
-repeat_transiently_failing_command "apt-get update -qq"
-repeat_transiently_failing_command "apt-get install -qq -y $PACKAGES_TO_INSTALL"
+repeat_transiently_failing_command "sudo apt-get update -qq"
+repeat_transiently_failing_command "sudo apt-get install -qq -y $PACKAGES_TO_INSTALL"
 
 if [[ $VIM_VERSION == "NEOVIM" ]]; then
    # Dirty hack, since PATH seems to be ignored.
