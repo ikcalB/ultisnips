@@ -9,6 +9,7 @@ echo ${TRAVIS_PYTHON_VERSION}
 EXTRA_OPTIONS=""
 if [[ $VIM_VERSION == "NEOVIM" ]]; then
    EXTRA_OPTIONS="--vimrc nvimrc"
+   cat nvimrc
 fi
 
    
