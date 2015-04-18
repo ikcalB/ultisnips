@@ -5,9 +5,7 @@ set -ex
 
 VIM_VERSION=$1; shift
 PYTHON_EXECUTABLE=$1; shift
-PYTHON_VERSION="$(PYTHON_EXECUTABLE --version 2>&1)"
-
-echo $PYTHON_EXECUTABLE
+PYTHON_VERSION="$(${PYTHON_EXECUTABLE} --version 2>&1)"
 
 repeat_transiently_failing_command () {
    COMMAND=$1; shift
@@ -80,5 +78,7 @@ if [[ $VIM_VERSION == "NEOVIM" ]]; then
    # Dirty hack, since PATH seems to be ignored.
    ln -sf $VIM_BINARY /usr/bin/vim
 fi
+
+export PATH="$(dirname $PYTHON_EXECUTABLE):$PATH"
 
 vim --version
