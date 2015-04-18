@@ -46,7 +46,7 @@ build_vanilla_vim () {
 build_neovim () {
    SHA=$1; shift
 
-   git clone git@github.com:neovim/neovim.git vim_build
+   git clone https://github.com/neovim/neovim.git vim_build
    pushd vim_build
 
    git checkout $SHA
