@@ -17,7 +17,7 @@ matrix:
       env: VIM_VERSION="NEOVIM"
 
 install: 
-   - pip install neovim==0.0.34
+   - pip install neovim
    - sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
 
 before_script:
