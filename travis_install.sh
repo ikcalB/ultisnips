@@ -3,12 +3,16 @@
 # Installs a known version of vim in the travis test runner.
 set -ex
 
+echo $(which python)
+echo ${VIM_VERSION}
+echo ${TRAVIS_PYTHON_VERSION}
+
 VIM_VERSION=$1; shift
 PYTHON_EXECUTABLE=$1; shift
 PYTHON_VERSION="$(${PYTHON_EXECUTABLE} --version 2>&1)"
 
 repeat_transiently_failing_command () {
-   COMMAND=$1; shift
+   local COMMAND=$1; shift
 
    set +e
    until ${COMMAND}; do
@@ -66,7 +70,11 @@ elif [[ $VIM_VERSION == "NEOVIM" ]]; then
    repeat_transiently_failing_command "add-apt-repository ppa:neovim-ppa/unstable -y"
    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL xclip gdb neovim"
    VIM_BINARY="/usr/bin/nvim"
-   sudo pip install neovim
+
+   cat > nvimrc << EOF
+let g:python_host_prog="$PYTHON_EXECUTABLE"
+EOF
+
 else
    echo "Unknown VIM_VERSION: $VIM_VERSION"
    exit 1

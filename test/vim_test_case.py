@@ -10,7 +10,7 @@ import time
 import unittest
 
 from test.constant import PYTHON3
-from test.vim_interface import create_directory, TempFileManager
+from test.vim_interface import create_directory, TempFileManager, read_text_file
 
 
 def plugin_cache_dir():
@@ -32,6 +32,7 @@ class VimTestCase(unittest.TestCase, TempFileManager):
     # Skip this test for the given reason or None for not skipping it.
     skip_if = lambda self: None
     version = None  # Will be set to vim --version output
+    vimrc = None # Will be set to a path to a vimrc
     maxDiff = None  # Show all diff output, always.
 
     def __init__(self, *args, **kwargs):
@@ -94,6 +95,8 @@ class VimTestCase(unittest.TestCase, TempFileManager):
             return self.skipTest(reason_for_skipping)
 
         vim_config = []
+        if self.vimrc:
+            vim_config = read_text_file(self.vimrc).splitlines(False)
         vim_config.append('set nocompatible')
         vim_config.append('set runtimepath=$VIMRUNTIME,%s,%s' % (
             os.path.dirname(os.path.dirname(__file__)), self._temp_dir))

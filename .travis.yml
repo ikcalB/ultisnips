@@ -17,12 +17,11 @@ matrix:
       env: VIM_VERSION="NEOVIM"
 
 install: 
-   - sudo ./install_vim.sh "${VIM_VERSION}" "$(which python)"
+   - sudo ./travis_install.sh "${VIM_VERSION}" "$(which python)"
 
 before_script:
   - tmux new -d -s vim
 
 script: 
-   - echo $PATH
-   - echo $(which python)
-   - ./test_all.py -v --plugins --interface tmux --session vim
+   - ./travis_script.sh
+

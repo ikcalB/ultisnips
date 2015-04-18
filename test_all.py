@@ -100,6 +100,8 @@ if __name__ == '__main__':
                      'multiplexer and race conditions in writing to the file system.')
         p.add_option('-x', '--exitfirst', dest='exitfirst', action='store_true',
                      help='exit instantly on first error or failed test.')
+        p.add_option('--vimrc', dest='vimrc', type=str, default="",
+                     help='path to a file containing a .vimrc which will be sourced first.')
 
         o, args = p.parse_args()
         return o, args
@@ -134,6 +136,7 @@ if __name__ == '__main__':
             test.interrupt = options.interrupt
             test.retries = options.retries
             test.test_plugins = options.plugins
+            test.vimrc = options.vimrc
             test.vim = vim
             all_other_plugins.update(test.plugins)
 
