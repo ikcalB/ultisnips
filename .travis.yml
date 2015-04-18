@@ -2,10 +2,10 @@ language: python
 
 python:
   - 2.7
-  # - 3.3
-  # - 3.4
+  - 3.3
+  - 3.4
 env:
-  # - VIM_VERSION="74"
+  - VIM_VERSION="74"
   - VIM_VERSION="NEOVIM"
 
 # Disable python3 testing with Neovim: https://github.com/neovim/neovim/issues/1829
