@@ -123,14 +123,12 @@ class VimInterface(TempFileManager):
                                       textwrap.dedent(os.linesep.join(config + post_config) + '\n'))
 
         b = read_text_file(config_path)
-        print "#sirver b: %r" % (b)
 
         # Note the space to exclude it from shell history.
         self.send(""" %s -u %s\r\n""" % (self._vim_executable, config_path))
 
         wait_until_file_exists(done_file)
         self._vim_pid = int(open(pid_file, 'r').read())
-        print "#sirver self._vim_pid: %r" % (self._vim_pid)
 
     def leave_with_wait(self):
         self.send(3 * ESC + ':qa!\n')
@@ -152,10 +150,8 @@ class VimInterfaceTmux(VimInterface):
 
         if PYTHON3:
             s = s.encode('utf-8')
-        i = 0
-        while i < len(s):
-            silent_call(['tmux', 'send-keys', '-t', self.session, '-l', s[i:i+10]])
-            i += 10
+        for c in s:
+            silent_call(['tmux', 'send-keys', '-t', self.session, '-l', c])
 
     def _check_version(self):
         stdout, _ = subprocess.Popen(['tmux', '-V'],
