@@ -3,8 +3,6 @@
 # Installs a known version of vim in the travis test runner.
 set -ex
 
-PYTHON_EXECUTABLE=$(which python)
-
 build_vanilla_vim () {
    local URL=$1; shift;
 
@@ -45,13 +43,8 @@ build_vanilla_vim () {
 if [[ $VIM_VERSION == "74" ]]; then
    build_vanilla_vim ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
 elif [[ $VIM_VERSION == "NEOVIM" ]]; then
-   cat > nvimrc << EOF
-let g:python_host_prog="$PYTHON_EXECUTABLE"
-EOF
-
+   pip install neovim
 else
    echo "Unknown VIM_VERSION: $VIM_VERSION"
    exit 1
 fi
-
-vim --version

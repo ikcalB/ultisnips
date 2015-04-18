@@ -23,11 +23,7 @@ install:
    - until sudo add-apt-repository ppa:neovim-ppa/unstable -y; do sleep 10; done
    - until sudo apt-get update -qq; do sleep 10; done
    - until sudo apt-get install -qq -y tmux xclip gdb neovim; do sleep 10; done
-   - ./travis_install.sh "${VIM_VERSION}" "$(which python)"
-   - pip install neovim
-
-before_script:
-  - tmux new -d -s vim
+   - ./travis_install.sh
 
 script: 
    - ./travis_script.sh
