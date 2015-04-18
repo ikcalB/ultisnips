@@ -18,7 +18,7 @@ matrix:
 
 install: 
    - pip install neovim
-   - sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
+   - sudo ./install_vim.sh "${VIM_VERSION}" "$(which python)"
 
 before_script:
   - tmux new -d -s vim

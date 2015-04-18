@@ -4,7 +4,10 @@
 set -ex
 
 VIM_VERSION=$1; shift
-PYTHON_VERSION=$1; shift
+PYTHON_EXECUTABLE=$1; shift
+PYTHON_VERSION="$(PYTHON_EXECUTABLE --version 2>&1)"
+
+echo $PYTHON_EXECUTABLE
 
 repeat_transiently_failing_command () {
    COMMAND=$1; shift
