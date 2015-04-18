@@ -2,12 +2,15 @@ language: python
 
 python:
   - 2.7
-  - 3.3
-  - 3.4
+  # - 3.3
+  # - 3.4
 env:
-  - VIM_VERSION="74"
+  # - VIM_VERSION="74"
+  - VIM_VERSION="NEOVIM"
 
-install: sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
+install: 
+   - sudo ./install_vim.sh "${VIM_VERSION}" "$(python --version 2>&1)"
+   - pip install neovim==0.0.34
 
 before_script:
   - tmux new -d -s vim

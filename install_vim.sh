@@ -38,6 +38,25 @@ build_vanilla_vim () {
    popd
 
    rm -rf vim_build
+
+   # Dirty hack, since PATH seems to be ignored.
+   ln -sf /home/travis/bin/vim /usr/bin/vim
+}
+
+build_neovim () {
+   SHA=$1; shift
+
+   git clone git@github.com:neovim/neovim.git vim_build
+   pushd vim_build
+
+   git checkout $SHA
+   make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=$HOME/neovim" install
+
+   popd 
+   rm -rf vim_build
+
+   # Dirty hack, since PATH seems to be ignored.
+   ln -sf /home/travis/neovim/bin/nvim /usr/bin/vim
 }
 
 repeat_transiently_failing_command () {
@@ -56,16 +75,15 @@ repeat_transiently_failing_command () {
 # Install tmux (> 1.8) and vim. 
 repeat_transiently_failing_command "add-apt-repository ppa:kalakris/tmux -y"
 repeat_transiently_failing_command "apt-get update -qq"
-repeat_transiently_failing_command "apt-get install -qq -y tmux"
+repeat_transiently_failing_command "apt-get install -qq -y tmux xclip gdb"
 
 if [[ $VIM_VERSION == "74" ]]; then
    build_vanilla_vim ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
+elif [[ $VIM_VERSION == "NEOVIM" ]]; then
+   build_neovim a88e2f4fd4c3e10aabd41e758cc845332be013da
 else
    echo "Unknown VIM_VERSION: $VIM_VERSION"
    exit 1
 fi
-
-# Dirty hack, since PATH seems to be ignored.
-ln -sf /home/travis/bin/vim /usr/bin/vim
 
 vim --version
