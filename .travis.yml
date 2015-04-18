@@ -18,10 +18,10 @@ matrix:
 
 install: 
    # This PPA contains tmux 1.8.
-   - unless sudo add-apt-repository ppa:kalakris/tmux -y; do sleep 10; done
-   - unless sudo add-apt-repository ppa:neovim-ppa/unstable -y; do sleep 10; done
-   - unless sudo apt-get update -qq; do sleep 10; done
-   - unless sudo apt-get install -qq -y tmux xclip gdb neovim; do sleep 10; done
+   - until sudo add-apt-repository ppa:kalakris/tmux -y; do sleep 10; done
+   - until sudo add-apt-repository ppa:neovim-ppa/unstable -y; do sleep 10; done
+   - until sudo apt-get update -qq; do sleep 10; done
+   - until sudo apt-get install -qq -y tmux xclip gdb neovim; do sleep 10; done
    - ./travis_install.sh "${VIM_VERSION}" "$(which python)"
    - pip install neovim
 
