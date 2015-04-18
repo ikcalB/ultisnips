@@ -82,4 +82,4 @@ fi
 export PATH="$(dirname $PYTHON_EXECUTABLE):$PATH"
 
 vim --version
-vim -c "python print('gi')"
+nvim -c "python print('seems to be working')" -c quit
