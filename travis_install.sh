@@ -9,7 +9,7 @@ build_vanilla_vim () {
    mkdir vim_build
    pushd vim_build
 
-   curl $URL -o vim.tar.bz2
+   until curl $URL -o vim.tar.bz2; do sleep 10; done
    tar xjf vim.tar.bz2
    cd vim${VIM_VERSION}
 
