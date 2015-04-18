@@ -17,7 +17,7 @@ matrix:
       env: VIM_VERSION="NEOVIM"
 
 install: 
-   - sudo ./travis_install.sh "${VIM_VERSION}" "$(which python)"
+   - ./travis_install.sh "${VIM_VERSION}" "$(which python)"
 
 before_script:
   - tmux new -d -s vim
