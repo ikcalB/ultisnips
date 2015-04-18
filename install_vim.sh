@@ -64,7 +64,7 @@ if [[ $VIM_VERSION == "74" ]]; then
 elif [[ $VIM_VERSION == "NEOVIM" ]]; then
    repeat_transiently_failing_command "add-apt-repository ppa:neovim-ppa/unstable -y"
    PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL xclip gdb neovim"
-   VIM_BINARY="/usr/local/bin/nvim"
+   VIM_BINARY="/usr/bin/nvim"
 else
    echo "Unknown VIM_VERSION: $VIM_VERSION"
    exit 1
@@ -72,8 +72,6 @@ fi
 
 repeat_transiently_failing_command "apt-get update -qq"
 repeat_transiently_failing_command "apt-get install -qq -y $PACKAGES_TO_INSTALL"
-
-$(which nvim)
 
 if [[ $VIM_VERSION == "NEOVIM" ]]; then
    # Dirty hack, since PATH seems to be ignored.
