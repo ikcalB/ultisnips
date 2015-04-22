@@ -1,15 +1,17 @@
+import re
 import sys
 
-# Some constants for better reading
 BS = '\x7f'
-ESC = '\x1b'
-ARR_L = '\x1bOD'
-ARR_R = '\x1bOC'
-ARR_U = '\x1bOA'
-ARR_D = '\x1bOB'
 
-# multi-key sequences generating a single key press
-SEQUENCES = [ARR_L, ARR_R, ARR_U, ARR_D]
+# These keys usually need to be escaped for a testing interface. We therefore
+# special case them and handle them as one keystroke everywhere.
+SEQUENCE_RE = re.compile(r"(\x1b[LRUDE])")
+SEQUENCE_LENGTH = 2
+ESC = '\x1bE'
+ARR_L = '\x1bL'
+ARR_R = '\x1bR'
+ARR_U = '\x1bU'
+ARR_D = '\x1bD'
 
 # Defined Constants
 JF = '?'  # Jump forwards

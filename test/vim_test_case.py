@@ -9,7 +9,7 @@ import textwrap
 import time
 import unittest
 
-from test.constant import PYTHON3
+from test.constant import PYTHON3, SEQUENCE_RE, SEQUENCE_LENGTH
 from test.vim_interface import create_directory, TempFileManager, read_text_file
 
 
@@ -179,8 +179,15 @@ class VimTestCase(unittest.TestCase, TempFileManager):
         if not self.interrupt:
             # Go into insert mode and type the keys but leave Vim some time to
             # react.
-            for c in 'i' + self.keys:
-                self.vim.send(c)
+            keys = 'i' + self.keys
+            i = 0
+            while i < len(keys):
+                if SEQUENCE_RE.match(keys[i:]):
+                    self.vim.send(keys[i:i+SEQUENCE_LENGTH])
+                    i += SEQUENCE_LENGTH
+                else:
+                    self.vim.send(keys[i])
+                    i += 1
                 time.sleep(self.sleeptime)
             self.output = self.vim.get_buffer_data()
 

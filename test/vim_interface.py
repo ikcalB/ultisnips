@@ -4,13 +4,12 @@ import os
 import re
 import shutil
 import subprocess
-import sys
 import tempfile
 import textwrap
 import time
 
 from test.constant import (ARR_D, ARR_L, ARR_R, ARR_U, BS, ESC, PYTHON3,
-        SEQUENCES)
+        SEQUENCE_RE)
 
 
 def wait_until_file_exists(file_path, times=None, interval=0.01):
@@ -124,7 +123,6 @@ class VimInterface(TempFileManager):
 
         # Note the space to exclude it from shell history.
         self.send(""" %s -u %s\r\n""" % (self._vim_executable, config_path))
-
         wait_until_file_exists(done_file)
         self._vim_pid = int(open(pid_file, 'r').read())
 
@@ -148,7 +146,7 @@ class VimInterfaceTmux(VimInterface):
 
         def send_string(strings, escape):
             if PYTHON3:
-                strings = strings.encode('utf-8')
+                strings = [ s.encode('utf-8') for s in strings ]
             args = ['tmux', 'send-keys', '-t', self.session]
             if not escape:
                 args.append('-l')
@@ -160,12 +158,22 @@ class VimInterfaceTmux(VimInterface):
         # shortcut. We rely in other places that ESC is only one char though,
         # so we have to make the escaping manually here. It does not hurt
         # regular Vim at all to send the null byte.
-        strings = re.split(r"\x1b(?!O)", s)
-        for string in strings[:-1]:
-            send_string([string], False)
-            # c-@ is the zerobyte.
-            send_string(['Escape', 'c-@'], True)
-        send_string([strings[-1]], False)
+        # We split at ESC, but not at cursor movement.
+        strings = filter(len, SEQUENCE_RE.split(s))
+        for string in strings:
+            if string == ESC:
+                # c-@ is the zerobyte.
+                send_string(['Escape', 'c-@'], True)
+            elif string == ARR_U:
+                send_string(['Up'], True)
+            elif string == ARR_D:
+                send_string(['Down'], True)
+            elif string == ARR_L:
+                send_string(['Left'], True)
+            elif string == ARR_R:
+                send_string(['Right'], True)
+            else:
+                send_string([string], False)
 
     def _check_version(self):
         stdout, _ = subprocess.Popen(['tmux', '-V'],
@@ -201,7 +209,6 @@ class VimInterfaceWindows(VimInterface):
     ]
 
     def __init__(self):
-        self.seq_buf = []
         # import windows specific modules
         import win32com.client
         import win32gui
@@ -229,15 +236,7 @@ class VimInterfaceWindows(VimInterface):
         return keys
 
     def send(self, keys):
-        self.seq_buf.append(keys)
-        seq = ''.join(self.seq_buf)
-
-        for f in SEQUENCES:
-            if f.startswith(seq) and f != seq:
-                return
-        self.seq_buf = []
-
-        seq = self.convert_keys(seq)
+        keys = self.convert_keys(keys)
 
         if not self.is_focused():
             time.sleep(2)
@@ -246,4 +245,4 @@ class VimInterfaceWindows(VimInterface):
             # This is the only way I can find to stop test execution
             raise KeyboardInterrupt('Failed to focus GVIM')
 
-        self.shell.SendKeys(seq)
+        self.shell.SendKeys(keys)
