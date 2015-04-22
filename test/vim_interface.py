@@ -122,8 +122,6 @@ class VimInterface(TempFileManager):
         config_path = self.write_temp('vim_config.vim',
                                       textwrap.dedent(os.linesep.join(config + post_config) + '\n'))
 
-        b = read_text_file(config_path)
-
         # Note the space to exclude it from shell history.
         self.send(""" %s -u %s\r\n""" % (self._vim_executable, config_path))
 
@@ -148,10 +146,26 @@ class VimInterfaceTmux(VimInterface):
         # to tmux, but it seems like this is all that is needed for now.
         s = s.replace(';', r'\;')
 
-        if PYTHON3:
-            s = s.encode('utf-8')
-        for c in s:
-            silent_call(['tmux', 'send-keys', '-t', self.session, '-l', c])
+        def send_string(strings, escape):
+            if PYTHON3:
+                strings = strings.encode('utf-8')
+            args = ['tmux', 'send-keys', '-t', self.session]
+            if not escape:
+                args.append('-l')
+            args.extend(strings)
+            silent_call(args)
+
+        # This is hackish: neovim needs to get each ESC padded with a zerobyte,
+        # otherwise it will be interpreted as a ALT + something keyboard
+        # shortcut. We rely in other places that ESC is only one char though,
+        # so we have to make the escaping manually here. It does not hurt
+        # regular Vim at all to send the null byte.
+        strings = re.split(r"\x1b(?!O)", s)
+        for string in strings[:-1]:
+            send_string([string], False)
+            # c-@ is the zerobyte.
+            send_string(['Escape', 'c-@'], True)
+        send_string([strings[-1]], False)
 
     def _check_version(self):
         stdout, _ = subprocess.Popen(['tmux', '-V'],
