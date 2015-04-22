@@ -15,6 +15,11 @@ matrix:
       env: VIM_VERSION="NEOVIM"
     - python: 3.4
       env: VIM_VERSION="NEOVIM"
+  allow_failures:
+    # TODO(sirver): Neovim does not play well with our testing right now.
+    - python: 2.7
+      env: VIM_VERSION="NEOVIM"
+
 
 install: 
    # Some of these commands fail trasiently. We keep retrying them until they suceed.

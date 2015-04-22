@@ -136,6 +136,10 @@ class VimInterfaceTmux(VimInterface):
 
     def __init__(self, vim_executable, session):
         VimInterface.__init__(self, vim_executable, 'Tmux')
+
+        # Neovim needs this clutch to not mistake escape as an ALT sequence.
+        self._send_null_after_escape = "nvim" in vim_executable
+
         self.session = session
         self._check_version()
 
@@ -162,8 +166,11 @@ class VimInterfaceTmux(VimInterface):
         strings = filter(len, SEQUENCE_RE.split(s))
         for string in strings:
             if string == ESC:
-                # c-@ is the zerobyte.
-                send_string(['Escape', 'c-@'], True)
+                if self._send_null_after_escape:
+                    # c-@ is the zerobyte.
+                    send_string(['Escape', 'c-@'], True)
+                else:
+                    send_string(['Escape'], True)
             elif string == ARR_U:
                 send_string(['Up'], True)
             elif string == ARR_D:
