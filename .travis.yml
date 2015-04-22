@@ -21,7 +21,7 @@ matrix:
       env: VIM_VERSION="NEOVIM"
 
 
-install: 
+install:
    # Some of these commands fail trasiently. We keep retrying them until they suceed.
    # This PPA contains tmux 1.8.
    - until sudo add-apt-repository ppa:kalakris/tmux -y; do sleep 10; done
@@ -30,6 +30,5 @@ install:
    - until sudo apt-get install -qq -y tmux xclip gdb neovim; do sleep 10; done
    - ./travis_install.sh
 
-script: 
+script:
    - ./travis_script.sh
-
