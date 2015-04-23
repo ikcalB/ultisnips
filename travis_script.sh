@@ -15,4 +15,4 @@ fi
 
 tmux new -d -s vim
    
-./test_all.py -v --plugins --interface tmux --session vim --vim $VIM_BINARY $EXTRA_OPTIONS
+./test_all.py -v --plugins --session vim --vim $VIM_BINARY $EXTRA_OPTIONS
