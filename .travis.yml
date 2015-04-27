@@ -8,20 +8,13 @@ env:
   - VIM_VERSION="74"
   - VIM_VERSION="NEOVIM"
 
-# Disable python3 testing with Neovim: https://github.com/neovim/neovim/issues/1829
 matrix:
-  exclude:
-    - python: 3.3
-      env: VIM_VERSION="NEOVIM"
-    - python: 3.4
-      env: VIM_VERSION="NEOVIM"
   allow_failures:
     # TODO(sirver): Neovim does not play well with our testing right now.
-    - python: 2.7
-      env: VIM_VERSION="NEOVIM"
+    - env: VIM_VERSION="NEOVIM"
 
 install:
-   # Some of these commands fail trasiently. We keep retrying them until they suceed.
+   # Some of these commands fail transiently. We keep retrying them until they succeed.
    # This PPA contains tmux 1.8.
    - until sudo add-apt-repository ppa:kalakris/tmux -y; do sleep 10; done
    - until sudo add-apt-repository ppa:neovim-ppa/unstable -y; do sleep 10; done
